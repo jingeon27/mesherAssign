@@ -6,15 +6,18 @@ module.exports = {
     node: true,
     browser: true,
   },
-
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: { jsx: true },
     jsx: true,
     useJSXTextNode: true,
   },
-
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'eslint-config-prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'eslint-config-prettier',
+    'plugin:prettier/recommended',
+  ],
   plugins: ['@typescript-eslint', 'import', 'prettier', 'react', 'react-hooks'],
   settings: { 'import/resolver': { typescript: {} } },
 

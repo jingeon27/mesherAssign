@@ -12,3 +12,4 @@ export const tokenList = {
 } as const;
 
 export type TokenListType = keyof typeof tokenList;
+export type TokenIdType = (typeof tokenList)[TokenListType];
