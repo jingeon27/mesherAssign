@@ -1,19 +1,17 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MainPage } from '../pages/main';
-import { wrapper } from '../utils/renderUi';
 import {
   disableButtonId,
   firstInputLabel,
   secondInputLabel,
   settingButtonId,
-} from '../constants/mainPageTestId';
+} from '../constants/mainPageTest';
 import userEvent from '@testing-library/user-event';
+import { alertMent } from 'constants/alertMent';
 
 describe('mainPage', () => {
   beforeEach(() => {
-    render(<MainPage />, {
-      wrapper: (props) => wrapper(props, { route: '/' }),
-    });
+    render(<MainPage />);
   });
 
   test("input에 수량이 없다면 '금액을 입력하세요'버튼이 보여야하며 비활성화 돼야한다.", () => {
@@ -25,10 +23,10 @@ describe('mainPage', () => {
     );
   });
 
-  test("설정 버튼을 누르면 '준비 중입니다.'라는 alert가 떠야한다.", async () => {
+  test("설정 버튼을 누르면 '준비 중입니다'라는 alert가 떠야한다.", async () => {
     await userEvent.click(screen.getByTestId(settingButtonId));
     await waitFor(() => {
-      expect(screen.getByText('준비 중입니다.'));
+      expect(screen.getByText(alertMent)).toBeInTheDocument();
     });
   });
 

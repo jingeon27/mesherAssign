@@ -11,5 +11,5 @@ export const tokenList = {
   ENS: 'ethereum-name-service',
 } as const;
 
-export type TokenListType = keyof typeof tokenList;
-export type TokenIdType = (typeof tokenList)[TokenListType];
+export type TokenListKeyType = keyof typeof tokenList;
+export type TokenIdType = (typeof tokenList)[TokenListKeyType];
