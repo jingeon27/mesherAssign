@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { IgetQuoteParams, getQuote } from 'apis';
+import { getQuote } from 'apis';
 import { TokenIdType } from 'constants/tokenList';
 
 export const useGetQuoteQuery = (ids: TokenIdType) => {

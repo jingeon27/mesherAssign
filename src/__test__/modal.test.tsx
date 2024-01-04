@@ -34,7 +34,7 @@ describe('modal', () => {
       await userEvent.click(screen.getByText(symbolText));
       await waitFor(() => {
         expect(screen.getByTestId(firstTriggerBtn)).toHaveTextContent(
-          'symbolText',
+          symbolText,
         );
       });
     });

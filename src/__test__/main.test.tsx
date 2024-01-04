@@ -8,6 +8,8 @@ import {
 } from '../constants/mainPageTest';
 import userEvent from '@testing-library/user-event';
 import { alertMent } from 'constants/alertMent';
+import { firstTriggerBtn } from 'constants/modalTest';
+import { TokenListKeyType } from 'constants/tokenList';
 
 describe('mainPage', () => {
   beforeEach(() => {
@@ -41,18 +43,38 @@ describe('mainPage', () => {
   });
 
   test('첫 번째 input창에 입력 시 두 번째 input에 값이 141.989가 되어야 한다.', async () => {
+    const symbolText: TokenListKeyType = 'AXS';
+    await userEvent.click(screen.getByTestId(firstTriggerBtn));
+    await waitFor(async () => {
+      await userEvent.click(screen.getByText(symbolText));
+      await waitFor(() => {
+        expect(screen.getByTestId(firstTriggerBtn)).toHaveTextContent(
+          symbolText,
+        );
+      });
+    });
     const input = '0.1';
     await userEvent.type(screen.getByLabelText(firstInputLabel), input);
     await waitFor(() => {
-      expect(screen.getByLabelText(secondInputLabel)).toHaveValue('141.989');
+      expect(screen.getByLabelText(secondInputLabel)).toHaveValue('10');
     });
   });
 
   test('두 번째 input창에 입력 시 첫 번째 input에 값이 141.989가 되어야 한다.', async () => {
-    const input = '0.1';
+    const symbolText: TokenListKeyType = 'AXS';
+    await userEvent.click(screen.getByTestId(firstTriggerBtn));
+    await waitFor(async () => {
+      await userEvent.click(screen.getByText(symbolText));
+      await waitFor(() => {
+        expect(screen.getByTestId(firstTriggerBtn)).toHaveTextContent(
+          symbolText,
+        );
+      });
+    });
+    const input = '1';
     await userEvent.type(screen.getByLabelText(secondInputLabel), input);
     await waitFor(() => {
-      expect(screen.getByLabelText(firstInputLabel)).toHaveValue('141.989');
+      expect(screen.getByLabelText(firstInputLabel)).toHaveValue('0.01');
     });
   });
 });
