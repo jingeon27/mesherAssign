@@ -8,8 +8,10 @@ import {
 } from 'constants/modalTest';
 import { TokenListKeyType, tokenList } from 'constants/tokenList';
 import { MainPage } from 'pages/main';
+import { mockGetQuote } from 'utils/mockGetValue';
 
 describe('modal', () => {
+  beforeAll(mockGetQuote);
   beforeEach(() => {
     render(<MainPage />);
   });

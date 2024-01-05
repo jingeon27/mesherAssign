@@ -13,10 +13,12 @@ export type nowType = keyof stateType;
 type inputStateType = {
   first: inputType;
   second: inputType;
+  recentlyEdit: nowType;
 };
 const initialInputState: inputStateType = {
   first: '0.0',
   second: '0.0',
+  recentlyEdit: 'first',
 } as const;
 const initialState: stateType = {
   first: 'axie-infinity',
@@ -37,18 +39,28 @@ export const useSwapInput = () => {
     }),
   });
   const firstInputUsd = useMemo(
-    () => parseInt(inputState.first) * firstQuote.data,
+    () => Number(inputState.first) * firstQuote.data,
     [inputState.first, firstQuote.data],
   );
   const secondInputUsd = useMemo(
-    () => parseInt(inputState.second) * secondQuote.data,
+    () => Number(inputState.second) * secondQuote.data,
     [inputState.second, secondQuote.data],
   );
   const inputUsd = {
     first: firstInputUsd,
     second: secondInputUsd,
   };
-  useEffect(() => {}, []);
+
+  useEffect(() => {
+    if (inputState.first === '0.0' && inputState.second === '0.0') {
+      return;
+    }
+    if (inputState.recentlyEdit === 'first') {
+      changeInputState('second')(`${firstInputUsd / secondQuote.data}`);
+      return;
+    }
+    changeInputState('first')(`${secondInputUsd / firstQuote.data}`);
+  }, [inputState.first, inputState.recentlyEdit, inputState.second]);
   return {
     inputUsd,
     setNowState,
@@ -57,5 +69,7 @@ export const useSwapInput = () => {
     changeState,
     nowState,
     inputState,
-  };
+    first: firstQuote.data,
+    second: secondQuote.data,
+  } as const;
 };

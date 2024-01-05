@@ -1,10 +1,4 @@
-import {
-  ComponentProps,
-  ComponentPropsWithRef,
-  PropsWithChildren,
-  forwardRef,
-  useState,
-} from 'react';
+import { ComponentProps, PropsWithChildren, useState } from 'react';
 
 import { createContext, useContext } from 'react';
 
@@ -48,43 +42,57 @@ const Provider = ({ children }: PropsWithChildren) => {
     </>
   );
 };
-export const Consumer = ({ children }: PropsWithChildren) => {
-  const value = useDropDownValue();
-  return value ? <>{children}</> : <></>;
-};
-export const Cancel = ({ onClick, ...props }: ComponentProps<'button'>) => {
-  const action = useDropDownAction();
+export const Content = ({ children }: PropsWithChildren) => (
+  <>
+    <DropDownValueContext.Consumer>
+      {(value) => (value ? children : null)}
+    </DropDownValueContext.Consumer>
+  </>
+);
+interface ButtonProps extends ComponentProps<'button'> {
+  'data-testid'?: string;
+}
+export const Cancel = ({ onClick, ...props }: ButtonProps) => {
   return (
-    <button
-      {...props}
-      onClick={(e) => {
-        if (onClick) {
-          onClick(e);
-        }
-        action(false);
-      }}
-    />
+    <DropDownActionContext.Consumer>
+      {(action) => (
+        <button
+          {...props}
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+            }
+            if (action) {
+              action(false);
+            }
+          }}
+        />
+      )}
+    </DropDownActionContext.Consumer>
   );
 };
-export const Trigger = forwardRef(
-  ({ onClick, ...props }: ComponentPropsWithRef<'button'>) => {
-    const action = useDropDownAction();
-    return (
-      <button
-        {...props}
-        onClick={(e) => {
-          if (onClick) {
-            onClick(e);
-          }
-          action(false);
-        }}
-      />
-    );
-  },
-);
+export const Trigger = ({ onClick, ...props }: ButtonProps) => {
+  return (
+    <DropDownActionContext.Consumer>
+      {(action) => (
+        <button
+          {...props}
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+            }
+            if (action) {
+              action(false);
+            }
+          }}
+        />
+      )}
+    </DropDownActionContext.Consumer>
+  );
+};
 export const DropDown = {
   Provider,
   Trigger,
-  Consumer,
+  Content,
   Cancel,
 };

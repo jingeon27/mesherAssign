@@ -1,2 +1,2 @@
-import '@testing-library/jest-dom';
-import 'jest-localstorage-mock';
+require('@testing-library/jest-dom');
+require('jest-localstorage-mock');

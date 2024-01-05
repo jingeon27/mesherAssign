@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Alert } from 'components/providers/alert';
 import { GlobalPortal } from 'components/providers/GlobalPotal';
 import { MainPage } from 'pages/main';
 import { PropsWithChildren } from 'react';
@@ -18,7 +19,7 @@ export const Providers = ({ children }: PropsWithChildren) => {
     <>
       <QueryClientProvider client={queryClient}>
         <GlobalPortal.Provider>
-          {children}
+          <Alert.Provider>{children}</Alert.Provider>
           <ReactQueryDevtools initialIsOpen={true} />
         </GlobalPortal.Provider>
       </QueryClientProvider>

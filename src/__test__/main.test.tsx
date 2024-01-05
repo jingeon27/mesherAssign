@@ -10,8 +10,10 @@ import userEvent from '@testing-library/user-event';
 import { alertMent } from 'constants/alertMent';
 import { firstTriggerBtn } from 'constants/modalTest';
 import { TokenListKeyType } from 'constants/tokenList';
+import { mockGetQuote } from 'utils/mockGetValue';
 
 describe('mainPage', () => {
+  beforeAll(mockGetQuote);
   beforeEach(() => {
     render(<MainPage />);
   });
