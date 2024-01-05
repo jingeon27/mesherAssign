@@ -1,12 +1,32 @@
-import { tokenList } from 'constants/tokenList';
+import { TokenIdType, tokenList } from 'constants/tokenList';
 import { DropDown } from './providers/DropDown';
 import { modalInputPlaceHolder } from 'constants/modalTest';
 import { Alert } from './providers/alert';
+import { ComponentProps, useMemo, useState } from 'react';
+import { getLocalStorage, setLocalStorage } from 'utils/localStorage';
 
 export interface modalProps {
-  changeState: (e: string) => void;
+  changeState: (e: TokenIdType) => void;
 }
+export const localStorageKey = 'localstrage';
+const CustomChangeState =
+  (params: (e: TokenIdType) => void) => (value: TokenIdType) => {
+    let arr = getLocalStorage();
+    if (arr.length === 7) {
+      const index = arr.indexOf(value);
+      if (index !== -1) {
+        arr.splice(index, 1);
+      }
+      arr.push(value);
+    }
+    if (arr.length > 7) {
+      arr = arr.slice(1, 8);
+    }
+    setLocalStorage(JSON.stringify(arr));
+    return params(value);
+  };
 export const Modal = (props: modalProps) => {
+  const [state, setState] = useState<string>('');
   return (
     <>
       <div
@@ -28,7 +48,13 @@ export const Modal = (props: modalProps) => {
             flexDirection: 'column',
           }}
         >
-          <Modal.Header {...props} />
+          <Modal.Header
+            {...props}
+            value={state}
+            onChange={() => {
+              setState(state);
+            }}
+          />
           <div
             css={{
               display: 'flex',
@@ -37,7 +63,7 @@ export const Modal = (props: modalProps) => {
             }}
           >
             {' '}
-            <Modal.Content {...props} />
+            <Modal.Content {...props} state={state} />
             <Modal.Footer />
           </div>
         </div>
@@ -45,7 +71,10 @@ export const Modal = (props: modalProps) => {
     </>
   );
 };
-Modal.Header = ({ changeState }: modalProps) => {
+Modal.Header = ({
+  changeState,
+  ...props
+}: modalProps & ComponentProps<'input'>) => {
   return (
     <div
       css={{
@@ -64,10 +93,13 @@ Modal.Header = ({ changeState }: modalProps) => {
         <h6 css={{ color: 'white' }}>토큰 선택</h6>
         <DropDown.Cancel>X</DropDown.Cancel>
       </div>
-      <input placeholder={modalInputPlaceHolder} />
+      <input placeholder={modalInputPlaceHolder} {...props} />
       <div css={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-        {Object.keys(tokenList).map((token) => (
-          <DropDown.Cancel key={token} onClick={() => changeState(token)}>
+        {getLocalStorage().map((token: any) => (
+          <DropDown.Cancel
+            key={token}
+            onClick={() => CustomChangeState(changeState)(token)}
+          >
             {token}
           </DropDown.Cancel>
         ))}
@@ -75,7 +107,12 @@ Modal.Header = ({ changeState }: modalProps) => {
     </div>
   );
 };
-Modal.Content = ({ changeState }: modalProps) => {
+Modal.Content = ({ changeState, state }: modalProps & { state: string }) => {
+  const tokenListKeys = Object.keys(tokenList);
+  const arr = useMemo(
+    () => tokenListKeys.filter((e) => state.includes(e)),
+    [tokenListKeys],
+  );
   return (
     <div
       css={{
@@ -85,10 +122,10 @@ Modal.Content = ({ changeState }: modalProps) => {
         height: '400px',
       }}
     >
-      {Object.keys(tokenList).map((token) => (
+      {arr.map((token) => (
         <DropDown.Cancel
           key={token}
-          onClick={() => changeState(token)}
+          onClick={() => CustomChangeState(changeState)(token as TokenIdType)}
           css={{ height: '300px' }}
         >
           {token}
