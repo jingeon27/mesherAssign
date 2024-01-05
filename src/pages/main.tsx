@@ -3,7 +3,7 @@ import { Alert } from 'components/providers/alert';
 import { Button } from 'components/button';
 import { Input } from 'components/input';
 import { Modal } from 'components/modal';
-import { DropDown } from 'components/providers/DropDown';
+import { DropDown, useDropDownValue } from 'components/providers/DropDown';
 import { GlobalPortal } from 'components/providers/GlobalPotal';
 import { inputLabel } from 'constants/mainPageTest';
 import { triggerBtn } from 'constants/modalTest';
@@ -20,7 +20,11 @@ export const MainPage = () => {
           flexDirection: 'column',
         }}
       >
-        <div>
+        <div
+          css={{
+            display: 'flex',
+          }}
+        >
           <h6>스왑</h6>
           <Alert.Trigger>
             <Svg.Setting
@@ -33,9 +37,11 @@ export const MainPage = () => {
             />
           </Alert.Trigger>
         </div>
-        <Suspense fallback={<></>}>
-          <MainPage.SwapInputs />
-        </Suspense>
+        <DropDown.Provider>
+          <Suspense fallback={<></>}>
+            <MainPage.SwapInputs />
+          </Suspense>{' '}
+        </DropDown.Provider>
       </div>
     </>
   );
@@ -53,46 +59,47 @@ MainPage.SwapInputs = () => {
     first,
     second,
   } = useSwapInput();
-
+  const value = useDropDownValue();
   return (
     <>
-      <DropDown.Provider>
-        {InputArray.map((item) => (
-          <Input
-            key={item}
-            typeBadge={
-              <DropDown.Trigger
-                onClick={() => {
-                  setNowState(item);
-                }}
-                data-testid={triggerBtn[item]}
-              >
-                {state[item]}
-              </DropDown.Trigger>
+      {InputArray.map((item) => (
+        <Input
+          key={item}
+          typeBadge={
+            <DropDown.Trigger
+              onClick={() => {
+                setNowState(item);
+                console.log(value);
+              }}
+              data-testid={triggerBtn[item]}
+            >
+              {state[item]}
+            </DropDown.Trigger>
+          }
+          usd={inputUsd[item]}
+          value={inputState[item]}
+          onBlur={() => {
+            if (!inputState.first) {
+              changeInputState(item)('0.0');
             }
-            usd={inputUsd[item]}
-            value={inputState[item]}
-            onBlur={() => {
-              if (!inputState.first) {
-                changeInputState(item)('0.0');
-              }
-            }}
-            aria-label={inputLabel[item]}
-            onChange={(e) => {
-              e.target.value = e.target.value.replace(/[^\d.]/g, '');
-              e = replaceUnderTen(e);
-              changeInputState('recentlyEdit')(item);
-              changeInputState(item)(e);
-            }}
-          />
-        ))}
-        <p>
-          1 {state.second} = {first / second} {state.first}{' '}
-          <span>(${second})</span>
-        </p>
-        <Button
-          isActive={Number(inputState.first) !== 0}
-          activeBtn={
+          }}
+          aria-label={inputLabel[item]}
+          onChange={(e) => {
+            e.target.value = e.target.value.replace(/[^\d.]/g, '');
+            e = replaceUnderTen(e);
+            changeInputState('recentlyEdit')(item);
+            changeInputState(item)(e);
+          }}
+        />
+      ))}
+      <p>
+        1 {state.second} = {first / second} {state.first}{' '}
+        <span>(${second})</span>
+      </p>
+      <Button
+        isActive={Number(inputState.first) !== 0}
+        activeBtn={
+          <Alert.Trigger>
             <button
               css={{
                 background: 'blue',
@@ -100,17 +107,18 @@ MainPage.SwapInputs = () => {
             >
               스왑
             </button>
-          }
-          disableBtn={
-            <button css={{ background: 'gray' }}>금액을 입력하세요.</button>
-          }
-        />
-        <DropDown.Content>
-          <GlobalPortal.Consumer>
-            <Modal changeState={changeState(nowState)} />
-          </GlobalPortal.Consumer>
-        </DropDown.Content>
-      </DropDown.Provider>
+          </Alert.Trigger>
+        }
+        disableBtn={
+          <button css={{ background: 'gray' }}>금액을 입력하세요.</button>
+        }
+      />
+
+      <DropDown.Content>
+        <GlobalPortal.Consumer>
+          <Modal changeState={changeState(nowState)} />{' '}
+        </GlobalPortal.Consumer>
+      </DropDown.Content>
     </>
   );
 };

@@ -19,7 +19,10 @@ export const Providers = ({ children }: PropsWithChildren) => {
     <>
       <QueryClientProvider client={queryClient}>
         <GlobalPortal.Provider>
-          <Alert.Provider>{children}</Alert.Provider>
+          <Alert.Provider>
+            {children}
+            <Alert.Consumer />
+          </Alert.Provider>
           <ReactQueryDevtools initialIsOpen={true} />
         </GlobalPortal.Provider>
       </QueryClientProvider>

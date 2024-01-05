@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, createContext, useState } from 'react';
+import { PropsWithChildren, createContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 const PortalContext = createContext<HTMLDivElement | null>(null);

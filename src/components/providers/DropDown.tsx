@@ -82,7 +82,7 @@ export const Trigger = ({ onClick, ...props }: ButtonProps) => {
               onClick(e);
             }
             if (action) {
-              action(false);
+              action(true);
             }
           }}
         />

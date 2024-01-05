@@ -40,7 +40,14 @@ export const Consumer = () => (
       {(value) =>
         value ? (
           <GlobalPortal.Consumer>
-            <div css={{ display: 'flex', flexDirection: 'column' }}>
+            <div
+              css={{
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'fixed',
+                top: '0px',
+              }}
+            >
               <div>{alertMent}</div>
               <Alert.Cancel>확인</Alert.Cancel>
             </div>
