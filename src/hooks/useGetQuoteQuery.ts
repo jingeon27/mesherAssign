@@ -5,6 +5,6 @@ import { TokenIdType } from 'constants/tokenList';
 export const useGetQuoteQuery = (ids: TokenIdType) => {
   return useSuspenseQuery({
     queryKey: [ids],
-    queryFn: () => getQuote({ ids }),
+    queryFn: () => getQuote(ids),
   });
 };

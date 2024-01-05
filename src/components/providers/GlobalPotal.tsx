@@ -22,11 +22,7 @@ function PortalProvider({ children }: PropsWithChildren) {
   );
 }
 
-interface PortalConsumerProps {
-  children: ReactNode;
-}
-
-function PortalConsumer({ children }: PortalConsumerProps) {
+function PortalConsumer({ children }: PropsWithChildren) {
   return (
     <PortalContext.Consumer>
       {(portalContainerRef) => {

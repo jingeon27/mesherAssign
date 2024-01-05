@@ -50,7 +50,7 @@ const Provider = ({ children }: PropsWithChildren) => {
 };
 export const Consumer = ({ children }: PropsWithChildren) => {
   const value = useDropDownValue();
-  return value ? children : null;
+  return value ? <>{children}</> : <></>;
 };
 export const Cancel = ({ onClick, ...props }: ComponentProps<'button'>) => {
   const action = useDropDownAction();

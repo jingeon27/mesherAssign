@@ -1,15 +1,11 @@
 import axios from 'axios';
 import { TokenIdType } from '../constants/tokenList';
 
-export interface IgetQuoteParams {
-  ids: TokenIdType;
-}
-
-export const getQuote = async (params: IgetQuoteParams) => {
+export const getQuote = async (ids: TokenIdType) => {
   const data = await axios({
     method: 'get',
     url: 'https://api.coingecko.com/api/v3/simple/price',
-    params,
+    params: { ids, vs_currencies: 'USD' },
   });
-  return data.data[params.ids].usd;
+  return data.data[ids].usd;
 };
